@@ -75,6 +75,20 @@ return function (App $app) {
       return $response;
     });
 
+    $app->get('/usuarios/modificar/{id}', function (Request $request, Response $response, array $args) {
+      $loader = new FilesystemLoader(__DIR__ . '/../vistas');
+      $twig = new Environment($loader);
+      $response->getBody()->write($twig->render('usuario_modificar.twig'));
+      return $response;
+    });
+
+    $app->get('/usuarios/agregar', function (Request $request, Response $response) {
+      $loader = new FilesystemLoader(__DIR__ . '/../vistas');
+      $twig = new Environment($loader);
+      $response->getBody()->write($twig->render('usuario_agregar.twig'));
+      return $response;
+    });
+
     $app->group('/users', function (Group $group) {
         $group->get('', ListUsersAction::class);
         $group->get('/{id}', ViewUserAction::class);
