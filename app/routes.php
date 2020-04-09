@@ -44,9 +44,34 @@ return function (App $app) {
         $resultado = null;
         $db = null;
       }catch(PDOException $e){
-        $response->getBody()->write( '{"ERROR" : {"text":'.$e->getMessage().'}');
+        $response->getBody()->write( '{"ERROR" : {"text":'.$e->getMessage().'}}');
       }
 
+      return $response;
+    });
+
+    $app->get('/usuarios/borrar/{id}', function (Request $request, Response $response, array $args) {
+      $id = $args['id'];
+      $sql = "DELETE FROM usuarios WHERE id = $id";
+
+
+      try{
+        $db = new db();
+        $db = $db->conexionDB();
+        $resultado = $db->prepare($sql);
+         $resultado->execute();
+
+        if ($resultado->rowCount() > 0) {
+          $response->getBody()->write( json_encode("Cliente eliminado.") );
+        }else {
+          $response->getBody()->write( json_encode("No existe cliente con este ID.") );
+        }
+
+        $resultado = null;
+        $db = null;
+      }catch(PDOException $e){
+        $response->getBody()->write( '{"ERROR" : {"text":'.$e->getMessage().'}}');
+      }
       return $response;
     });
 
