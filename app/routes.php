@@ -21,6 +21,7 @@ return function (App $app) {
       return $response;
     });
 
+//LISTAR USUARIO
     $app->get('/usuarios', function (Request $request, Response $response) {
       $loader = new FilesystemLoader(__DIR__ . '/../vistas');
       $twig = new Environment($loader);
@@ -35,7 +36,7 @@ return function (App $app) {
             $usuarios[] = $obj;
           }
           $datos = array(
-            'usuarios' => $usuarios,
+            'usuarios' => $usuarios
           );
           $response->getBody()->write($twig->render('usuarios_listados.twig', $datos));
         }else{
@@ -50,6 +51,7 @@ return function (App $app) {
       return $response;
     });
 
+//BORRAR USUARIO
     $app->get('/usuarios/borrar/{id}', function (Request $request, Response $response, array $args) {
       $id = $args['id'];
       $sql = "DELETE FROM usuarios WHERE id = $id";
@@ -62,9 +64,9 @@ return function (App $app) {
          $resultado->execute();
 
         if ($resultado->rowCount() > 0) {
-          $response->getBody()->write( json_encode("Cliente eliminado.") );
+          $response->getBody()->write( json_encode("Usuario eliminado.") );
         }else {
-          $response->getBody()->write( json_encode("No existe cliente con este ID.") );
+          $response->getBody()->write( json_encode("No existe usuario con este ID.") );
         }
 
         $resultado = null;
@@ -75,13 +77,13 @@ return function (App $app) {
       return $response;
     });
 
-//MODIFICAR USUARIO
+//REENVIA A LA PAGINA PARA INGRESAR LOS DATOS PARA MODIFICAR USUARIO
     $app->get('/usuarios/modificar/{id}', function (Request $request, Response $response, array $args) {
       $loader = new FilesystemLoader(__DIR__ . '/../vistas');
       $twig = new Environment($loader);
 
-      $id_cliente = $request->getAttribute('id');
-      $sql = "SELECT * FROM usuarios WHERE id = $id_cliente";
+      $id = $request->getAttribute('id');
+      $sql = "SELECT * FROM usuarios WHERE id = $id";
       try{
         $db = new db();
         $db = $db->conexionDB();
@@ -93,7 +95,7 @@ return function (App $app) {
           );
           $response->getBody()->write($twig->render('usuario_modificar.twig', $datos));
         }else{
-          $response->getBody()->write( json_encode("No existen clientes en la base de datos") );
+          $response->getBody()->write( json_encode("No existen usuario en la base de datos") );
         }
         $resultado = null;
         $db = null;
@@ -103,7 +105,50 @@ return function (App $app) {
       return $response;
     });
 
-//AGREGAR USUARIO
+//GUARDAR LOS CAMBIOS AL USUARIO MODIFICADO
+    $app->post('/usuarios/modificar/guardar/{id}', function (Request $request, Response $response, array $args) {
+      $loader = new FilesystemLoader(__DIR__ . '/../vistas');
+      $twig = new Environment($loader);
+
+      $id = $request->getAttribute('id');
+
+      $nombre = $request->getParsedBody()['nombre'];
+      $apellidos = $request->getParsedBody()['apellido'];
+      $ci = $request->getParsedBody()['ci'];
+      $email = $request->getParsedBody()['email'];
+      $pass = password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT);
+
+     $sql = "UPDATE usuarios SET
+                                nombre = :nombre,
+                                apellido = :apellidos,
+                                ci = :ci,
+                                email = :email,
+                                password = :pass
+                            WHERE id = $id";
+    try{
+      $db = new db();
+      $db = $db->conexionDB();
+      $resultado = $db->prepare($sql);
+
+      $resultado->bindParam(':nombre', $nombre);
+      $resultado->bindParam(':apellidos', $apellidos);
+      $resultado->bindParam(':ci', $ci);
+      $resultado->bindParam(':email', $email);
+      $resultado->bindParam(':pass', $pass);
+
+      $resultado->execute();
+      $response->getBody()->write( json_encode("Usuario modificado guardado.") );
+
+     $resultado = null;
+     $db = null;
+   }catch(PDOException $e){
+     $response->getBody()->write( '{"error" : {"text":'.$e->getMessage().'}}' );
+   }
+
+      return $response;
+    });
+
+//ME DIRECCIONA A LA PAGINA PARA AGREGAR USUARIO
     $app->get('/usuarios/agregar', function (Request $request, Response $response) {
       $loader = new FilesystemLoader(__DIR__ . '/../vistas');
       $twig = new Environment($loader);
@@ -111,8 +156,8 @@ return function (App $app) {
       return $response;
     });
 
-//REGISTRAR USUARIO
-// POST Crear nuevo cliente
+//SE REGISTRA UN USUARIO NUEVO
+// POST Crear nuevo usuario
     $app->post('/usuarios/agregar/registrar', function (Request $request, Response $response) {
       $loader = new FilesystemLoader(__DIR__ . '/../vistas');
       $twig = new Environment($loader);
@@ -121,7 +166,8 @@ return function (App $app) {
       $apellidos = $request->getParsedBody()['apellido'];
       $ci = $request->getParsedBody()['ci'];
       $email = $request->getParsedBody()['email'];
-      $pass = $request->getParsedBody()['password'];
+      //la funcion sha1 codifica la contrasña
+      $pass = password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT);
 
      $sql = "INSERT INTO usuarios (nombre, apellido, ci, email, password) VALUES
              (:nombre, :apellidos, :ci, :email, :pass)";
@@ -138,7 +184,7 @@ return function (App $app) {
       $resultado->bindParam(':pass', $pass);
 
       $resultado->execute();
-      $response->getBody()->write( json_encode("Nuevo cliente guardado.") );
+      $response->getBody()->write( json_encode("Nuevo usuario guardado.") );
 
      $resultado = null;
      $db = null;

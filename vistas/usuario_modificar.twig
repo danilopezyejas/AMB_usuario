@@ -14,7 +14,7 @@
     <div class="container">
 
     <h1>Modificar usuario!</h1>
-    <form>
+    <form class="form-horizontal" method="post" enctype="multipart/form-data" action="/usuarios/modificar/guardar/{{usuario.id}}">
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="nombre">Nombre</label>
@@ -33,14 +33,14 @@
     </div>
     <div class="col-md-4 mb-3">
       <label for="email" >Email</label>
-      <input type="email" class="form-control is-valid" id="email" value="{{usuario.email}}">
+      <input type="email" class="form-control is-valid" id="email" value="{{usuario.email}}" name="email">
       <div class="valid-feedback">
         ¡Se ve bien!
       </div>
     </div>
     <div class="col-md-4 mb-3">
       <label for="password">Password</label>
-      <input type="password" class="form-control is-valid" id="password" value="{{usuario.password}}">
+      <input type="password" class="form-control is-valid" id="password" value="{{usuario.password}}" name="password">
       <div class="valid-feedback">
         ¡Se ve bien!
       </div>
