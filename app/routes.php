@@ -75,17 +75,76 @@ return function (App $app) {
       return $response;
     });
 
+//MODIFICAR USUARIO
     $app->get('/usuarios/modificar/{id}', function (Request $request, Response $response, array $args) {
       $loader = new FilesystemLoader(__DIR__ . '/../vistas');
       $twig = new Environment($loader);
-      $response->getBody()->write($twig->render('usuario_modificar.twig'));
+
+      $id_cliente = $request->getAttribute('id');
+      $sql = "SELECT * FROM usuarios WHERE id = $id_cliente";
+      try{
+        $db = new db();
+        $db = $db->conexionDB();
+        $resultado = $db->query($sql);
+
+        if ( $usuario = $resultado->fetch(PDO::FETCH_OBJ) ){
+          $datos = array(
+            'usuario' => $usuario
+          );
+          $response->getBody()->write($twig->render('usuario_modificar.twig', $datos));
+        }else{
+          $response->getBody()->write( json_encode("No existen clientes en la base de datos") );
+        }
+        $resultado = null;
+        $db = null;
+      }catch(PDOException $e){
+        $response->getBody()->write( '{"ERROR" : {"text":'.$e->getMessage().'}}');
+      }
       return $response;
     });
 
+//AGREGAR USUARIO
     $app->get('/usuarios/agregar', function (Request $request, Response $response) {
       $loader = new FilesystemLoader(__DIR__ . '/../vistas');
       $twig = new Environment($loader);
       $response->getBody()->write($twig->render('usuario_agregar.twig'));
+      return $response;
+    });
+
+//REGISTRAR USUARIO
+// POST Crear nuevo cliente
+    $app->post('/usuarios/agregar/registrar', function (Request $request, Response $response) {
+      $loader = new FilesystemLoader(__DIR__ . '/../vistas');
+      $twig = new Environment($loader);
+
+      $nombre = $request->getParsedBody()['nombre'];
+      $apellidos = $request->getParsedBody()['apellido'];
+      $ci = $request->getParsedBody()['ci'];
+      $email = $request->getParsedBody()['email'];
+      $pass = $request->getParsedBody()['password'];
+
+     $sql = "INSERT INTO usuarios (nombre, apellido, ci, email, password) VALUES
+             (:nombre, :apellidos, :ci, :email, :pass)";
+
+    try{
+      $db = new db();
+      $db = $db->conexionDB();
+      $resultado = $db->prepare($sql);
+
+      $resultado->bindParam(':nombre', $nombre);
+      $resultado->bindParam(':apellidos', $apellidos);
+      $resultado->bindParam(':ci', $ci);
+      $resultado->bindParam(':email', $email);
+      $resultado->bindParam(':pass', $pass);
+
+      $resultado->execute();
+      $response->getBody()->write( json_encode("Nuevo cliente guardado.") );
+
+     $resultado = null;
+     $db = null;
+   }catch(PDOException $e){
+     $response->getBody()->write( '{"error" : {"text":'.$e->getMessage().'}}' );
+   }
       return $response;
     });
 

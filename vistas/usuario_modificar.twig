@@ -18,33 +18,36 @@
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="nombre">Nombre</label>
-      <input type="text" name="nombre" class="form-control" placeholder="Juan" id="nombre" required>
+      <input type="text" name="nombre" class="form-control" id="nombre" value="{{usuario.nombre}}">
     </div>
     <div class="col-md-4 mb-3">
       <label for="apellido">Apellido</label>
-      <input type="text" class="form-control" name="apellido" placeholder="Silvera" id="apellido" >
+      <input type="text" class="form-control" name="apellido" id="apellido" value="{{usuario.apellido}}">
     </div>
     <div class="col-md-4 mb-3">
       <label for="ci">DNI</label>
-      <input type="text" class="form-control is-valid" name="ci" placeholder="11111111" id="ci" >
+      <input type="text" class="form-control is-valid" name="ci" id="ci" value="{{usuario.ci}}">
       <div class="valid-feedback">
         ¡Se ve bien!
       </div>
     </div>
     <div class="col-md-4 mb-3">
-      <label for="edad">Edad</label>
-      <input type="text" class="form-control" name="edad" placeholder="21" id="edad" >
-    </div>
-    <div class="col-md-4 mb-3">
       <label for="email" >Email</label>
-      <input type="email" class="form-control is-valid" id="email">
+      <input type="email" class="form-control is-valid" id="email" value="{{usuario.email}}">
       <div class="valid-feedback">
         ¡Se ve bien!
       </div>
     </div>
     <div class="col-md-4 mb-3">
       <label for="password">Password</label>
-      <input type="password" class="form-control is-valid" id="password" value="algo">
+      <input type="password" class="form-control is-valid" id="password" value="{{usuario.password}}">
+      <div class="valid-feedback">
+        ¡Se ve bien!
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="password2">Password</label>
+      <input type="password" class="form-control is-valid" id="password2" value="{{usuario.password}}">
       <div class="valid-feedback">
         ¡Se ve bien!
       </div>
