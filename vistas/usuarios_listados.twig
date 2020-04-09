@@ -11,13 +11,12 @@
   </head>
   <body>
     <h1>Listado de usuarios</h1>
-    <div class="table-responsive">
+    <div class="table-responsive container">
               <table class="table table-striped">
                 <thead>
                   <tr>
                     <th>Nombre</th>
                     <th>Apellido</th>
-                    <th>Edad</th>
                     <th>Ci</th>
                     <th>Email</th>
                     <th>Borrar usuario</th>
@@ -27,16 +26,15 @@
                 <tbody>
                   {% for persona in usuarios %}
                   <tr>
-                    <td>{{persona.nombre()}}</td>
-                    <td>{{persona.getApellido()}}</td>
-                    <td>{{persona.getEdad()}}</td>
-                    <td>{{persona.getCI()}}</td>
-                    <td>{{persona.getEmail()}}</td>
+                    <td>{{persona.nombre}}</td>
+                    <td>{{persona.apellido}}</td>
+                    <td>{{persona.ci}}</td>
+                    <td>{{persona.email}}</td>
                     <td>
                       <input type="button" value="Borrar" class="btn btn-danger" onClick="window.location='{$url_base}usuario/listado/borrar/{$persona->getId()}/'"/>
                     </td>
                     <td>
-                      <input type="button" value="Modificar" class="btn btn-danger" onClick="window.location='{$url_base}usuario/listado/borrar/{$persona->getId()}/'"/>
+                      <input type="button" value="Modificar" class="btn btn-info" onClick="window.location='{$url_base}usuario/listado/borrar/{$persona->getId()}/'"/>
                     </td>
                   </tr>
                   {% endfor %}

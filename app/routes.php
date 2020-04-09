@@ -9,6 +9,7 @@ use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+require __DIR__ . '/../src/config/db.php';
 
 
 return function (App $app) {
@@ -17,6 +18,35 @@ return function (App $app) {
       $twig = new Environment($loader);
 
       $response->getBody()->write($twig->render('index.twig'));
+      return $response;
+    });
+
+    $app->get('/usuarios', function (Request $request, Response $response) {
+      $loader = new FilesystemLoader(__DIR__ . '/../vistas');
+      $twig = new Environment($loader);
+
+      $sql = "SELECT * FROM usuarios";
+      try{
+        $db = new db();
+        $db = $db->conexionDB() ;
+        $resultado = $db->query($sql);
+        if($resultado->rowCount() > 0){
+          while ( $obj = $resultado->fetch(PDO::FETCH_OBJ) ) {
+            $usuarios[] = $obj;
+          }
+          $datos = array(
+            'usuarios' => $usuarios,
+          );
+          $response->getBody()->write($twig->render('usuarios_listados.twig', $datos));
+        }else{
+          $response->getBody()->write( json_encode("No existen clientes en la base de datos") );
+        }
+        $resultado = null;
+        $db = null;
+      }catch(PDOException $e){
+        $response->getBody()->write( '{"ERROR" : {"text":'.$e->getMessage().'}');
+      }
+
       return $response;
     });
 
