@@ -14,11 +14,7 @@ require __DIR__ . '/../src/config/db.php';
 
 return function (App $app) {
     $app->get('/', function (Request $request, Response $response) {
-      $loader = new FilesystemLoader(__DIR__ . '/../vistas');
-      $twig = new Environment($loader);
-
-      $response->getBody()->write($twig->render('index.twig'));
-      return $response;
+      return $response->withHeader('Location','/usuarios');
     });
 
 //LISTAR USUARIO
@@ -64,7 +60,7 @@ return function (App $app) {
          $resultado->execute();
 
         if ($resultado->rowCount() > 0) {
-          $response->getBody()->write( json_encode("Usuario eliminado.") );
+          return $response->withHeader('Location','/usuarios');
         }else {
           $response->getBody()->write( json_encode("No existe usuario con este ID.") );
         }
@@ -137,7 +133,23 @@ return function (App $app) {
       $resultado->bindParam(':pass', $pass);
 
       $resultado->execute();
-      $response->getBody()->write( json_encode("Usuario modificado guardado.") );
+
+      $sqlUsuarios = "SELECT * FROM usuarios";
+      $usrs = $db->query($sqlUsuarios);
+      if($usrs->rowCount() > 0){
+        while ( $obj = $usrs->fetch(PDO::FETCH_OBJ) ) {
+          $usuarios[] = $obj;
+        }
+        $datos = array(
+          'usuarios' => $usuarios,
+          'mensaje' => "Usuario modificado exitosamente."
+        );
+
+        return $response->withHeader('Location','/usuarios');
+        // $response->getBody()->write($twig->render('usuarios_listados.twig', $datos));
+      }else{
+        $response->getBody()->write( json_encode("No existen clientes en la base de datos") );
+      }
 
      $resultado = null;
      $db = null;
@@ -184,24 +196,14 @@ return function (App $app) {
       $resultado->bindParam(':pass', $pass);
 
       $resultado->execute();
-      $response->getBody()->write( json_encode("Nuevo usuario guardado.") );
 
      $resultado = null;
      $db = null;
+     return $response->withHeader('Location','/usuarios');
    }catch(PDOException $e){
      $response->getBody()->write( '{"error" : {"text":'.$e->getMessage().'}}' );
    }
       return $response;
     });
 
-    $app->group('/users', function (Group $group) {
-        $group->get('', ListUsersAction::class);
-        $group->get('/{id}', ViewUserAction::class);
-    });
-
-    $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
-    $name = $args['name'];
-    $response->getBody()->write("Hello, $name");
-    return $response;
-});
 };
