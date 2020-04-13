@@ -26,28 +26,28 @@
     </div>
     <div class="col-md-4 mb-3">
       <label for="ci">DNI</label>
-      <input type="text" class="form-control is-valid" name="ci" id="ci" value="{{usuario.ci}}">
+      <input type="text" class="form-control" name="ci" id="ci" value="{{usuario.ci}}">
       <div class="valid-feedback">
         ¡Se ve bien!
       </div>
     </div>
     <div class="col-md-4 mb-3">
       <label for="email" >Email</label>
-      <input type="email" class="form-control is-valid" id="email" value="{{usuario.email}}" name="email">
+      <input type="email" class="form-control" id="email" value="{{usuario.email}}" name="email">
       <div class="valid-feedback">
         ¡Se ve bien!
       </div>
     </div>
     <div class="col-md-4 mb-3">
       <label for="password">Password</label>
-      <input type="password" class="form-control is-valid" id="password" value="{{usuario.password}}" name="password">
+      <input type="password" class="form-control" id="password" value="{{usuario.password}}" name="password">
       <div class="valid-feedback">
         ¡Se ve bien!
       </div>
     </div>
     <div class="col-md-4 mb-3">
       <label for="password2">Password</label>
-      <input type="password" class="form-control is-valid" id="password2" value="{{usuario.password}}">
+      <input type="password" class="form-control" id="password2" value="{{usuario.password}}">
       <div class="valid-feedback">
         ¡Se ve bien!
       </div>
@@ -62,5 +62,23 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("input#password2").on("keyup",function(){
+          var p1 = $('#password').val()
+          var p2 = $('#password2').val()
+
+          if (p1 == p2){
+              $('#password2').removeClass('form-control is-invalid')
+              $('#password2').addClass('form-control is-valid')
+          }else {
+            $('#password2').removeClass('form-control is-valid')
+             $('#password2').addClass('form-control is-invalid')
+          }
+        })
+    });
+    </script>
+
   </body>
 </html>

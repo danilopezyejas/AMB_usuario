@@ -16,7 +16,7 @@
   <title>AMB usuario</title>
 </head>
 
-<body onclick="verificar()">
+<body>
   <div class="container">
     <h1>Alta usuario!</h1>
     <div id="prueba"></div>
@@ -32,25 +32,25 @@
         </div>
         <div class="col-md-4 mb-3">
           <label for="ci">DNI</label>
-          <input type="text" class="form-control is-valid" name="ci" placeholder="11111111" id="ci">
+          <input type="text" class="form-control " name="ci" placeholder="11111111" id="ci">
           <div class="valid-feedback">
             ¡Se ve bien!
           </div>
         </div>
         <div class="col-md-4 mb-3">
           <label for="email">Email</label>
-          <input type="email" class="form-control is-valid" id="email" name="email">
+          <input type="email" class="form-control" id="email" name="email">
           <div class="valid-feedback">
             ¡Se ve bien!
           </div>
         </div>
         <div class="col-md-4 mb-3">
           <label for="password">Password</label>
-          <input type="password" class="form-control is-valid" id="password" name="password">
+          <input type="password" class="form-control" id="password" name="password">
         </div>
         <div class="col-md-4 mb-3">
           <label for="password2">Repita su Password</label>
-          <input type="password" class="form-control is-valid"
+          <input type="password" class="form-control"
             id="password2">
         </div>
       </div>
@@ -69,7 +69,23 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
     crossorigin="anonymous"></script>
-    <script src="../js/funciones.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("input#password2").on("keyup",function(){
+          var p1 = $('#password').val()
+          var p2 = $('#password2').val()
+
+          if (p1 == p2){
+              $('#password2').removeClass('form-control is-invalid')
+              $('#password2').addClass('form-control is-valid')
+          }else {
+            $('#password2').removeClass('form-control is-valid')
+             $('#password2').addClass('form-control is-invalid')
+          }
+        })
+    });
+    </script>
 </body>
 
 </html>

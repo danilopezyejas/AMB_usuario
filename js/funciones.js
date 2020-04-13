@@ -1,16 +1,56 @@
-<<<<<<< HEAD
-function cargarParaVer(){
-  $(document).ready(function(){
-  alert('bien');
-});
-}
-=======
-function verificar(){
-    var p1 = $('#password').val()
-    var p2 = $('#password2').val()
+function paraVer(id_pelicula){
+    $.ajax(
+        {url: "/tip/framework/pelicula/agregar_lista/",
+        data: { id_pelicula: id_pelicula},
+        method: "POST",
+         dataType: "json", 
+         success: function(json) {
+            if(json.res==1){
+                //todo ok
+                alert(json.msj);
+                $('#pver_'+id_pelicula).hide(); //display:none
+                $('#nover_'+id_pelicula).show();
+            }else{
+                alert(json.msj);
+            }
+        }
+    });
+    //cargarParaVer();
 
-    if (p1 == p2){
-        $('#prueba').html(<h1>password iguales</h1>)
-    }
+    //ejecutar el llamado ajax a pelicula/agregar_lista/ -> demora 1 min
+    //ejecuta cargarParaVer();
+    // cuando pasa 1 min, ejecutar success()
 }
->>>>>>> 6e6c875759aac176f00ed5f656ad7b1d32119f46
+function noVer(id_pelicula){
+	$.ajax(
+    	{url: "/tip/framework/pelicula/quitar_lista/",
+    	data: { id_pelicula: id_pelicula},
+    	method: "POST",
+     	dataType: "json", 
+     	success: function(json) {
+    		if(json.res==1){
+    			//todo ok
+    			alert(json.msj);
+                $('#pver_'+id_pelicula).show();
+                $('#nover_'+id_pelicula).hide();
+    		}else{
+				alert(json.msj);
+    		}
+    	}
+    });
+    //cargarParaVer();
+
+    //ejecutar el llamado ajax a pelicula/agregar_lista/ -> demora 1 min
+    //ejecuta cargarParaVer();
+    // cuando pasa 1 min, ejecutar success()
+}
+
+function cargarParaVer(id_usuario){
+	$('.modal-body').html("Id Usuario "+id_usuario);
+
+	// Display Modal
+	$('#pverModal').modal('show');
+
+}
+
+
