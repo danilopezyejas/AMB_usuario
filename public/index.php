@@ -38,7 +38,8 @@ AppFactory::setContainer($container);
 $app = AppFactory::create();
 $callableResolver = $app->getCallableResolver();
 
- // en index.php luego de "$app = AppFactory::create();" agregar -> $app->setBasePath('/AMB_usuario-master/public');
+ // en index.php luego de "$app = AppFactory::create();"
+ //agregar -> $app->setBasePath('/AMB_usuario-master/public');
 $app->setBasePath('/slimPHP/mySLIM/AMBusuario/public');
 
 // Register middleware
