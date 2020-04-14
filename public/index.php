@@ -10,6 +10,7 @@ use Slim\Factory\ServerRequestCreatorFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
@@ -36,6 +37,9 @@ $container = $containerBuilder->build();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 $callableResolver = $app->getCallableResolver();
+
+ // en index.php luego de "$app = AppFactory::create();" agregar -> $app->setBasePath('/AMB_usuario-master/public');
+$app->setBasePath('/slimPHP/mySLIM/AMBusuario/public');
 
 // Register middleware
 $middleware = require __DIR__ . '/../app/middleware.php';
